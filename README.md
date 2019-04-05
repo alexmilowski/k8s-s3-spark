@@ -32,18 +32,39 @@ In the above command:
 
 This will build a distribution you can use to build base container images.
 
-## Build Base Container Images
+## Building Base Container Images
 
 When you have unpacked the build distribution of Spark, you'll have a
 dockerfiles for building spark container images. You can build an s3 compatible
 spark image for your target languages (e.g., Java/Scala and Python), via the
 following:
 
-```
+```bash
 export OWNER=alexmilowski
 export SPARK_VERSION=2.4.1
 export HADOOP_VERSION=2.9.2
 export IMAGE_VERSION=1
 docker build -t ${OWNER}/s3-spark:${SPARK_VERSION}-${HADOOP_VERSION}-${IMAGE_VERSION} --no-cache -f kubernetes/dockerfiles/spark/Dockerfile .
 docker build -t ${OWNER}/s3-pyspark:${SPARK_VERSION}-${HADOOP_VERSION}-${IMAGE_VERSION} --no-cache -f kubernetes/dockerfiles/spark/bindings/python/Dockerfile --build-arg base_img=alexmilowski/s3-spark:${SPARK_VERSION}-${HADOOP_VERSION}-${IMAGE_VERSION} .
+```
+
+For K8S you'll need to package your code using one of these base images.
+
+## Testing S3 Access
+
+You can build the access test via:
+
+```bash
+export OWNER=alexmilowski
+export SPARK_VERSION=2.4.1
+export HADOOP_VERSION=2.9.2
+export IMAGE_VERSION=1
+docker build -t ${OWNER}/s3-spark-test:${SPARK_VERSION}-${HADOOP_VERSION}-${IMAGE_VERSION} --no-cache -f test/access/Dockerfile --build-arg base_img=${OWNER}/s3-pyspark:${SPARK_VERSION}-${HADOOP_VERSION}-${IMAGE_VERSION} .
+```
+
+```bash
+export ENDPOINT=...
+export ACCESS_KEY=...
+export SECRET_KEY=...
+docker run -it ${OWNER}/s3-spark-test:${SPARK_VERSION}-${HADOOP_VERSION}-${IMAGE_VERSION} /opt/spark/bin/spark-submit --master local /app/test_access.py --endpoint ${ENDPOINT} --access-key ${ACCESS_KEY} --secret-key ${SECRET_KEY} s3a://code/test_access.py
 ```
