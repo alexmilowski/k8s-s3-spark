@@ -34,10 +34,16 @@ This will build a distribution you can use to build base container images.
 
 ## Build Base Container Images
 
+When you have unpacked the build distribution of Spark, you'll have a
+dockerfiles for building spark container images. You can build an s3 compatible
+spark image for your target languages (e.g., Java/Scala and Python), via the
+following:
+
 ```
 export OWNER=alexmilowski
 export SPARK_VERSION=2.4.1
 export HADOOP_VERSION=2.9.2
-docker build -t ${OWNER}/s3-spark:${SPARK_VERSION}-${HADOOP_VERSION} --no-cache -f kubernetes/dockerfiles/spark/Dockerfile .
-docker build -t ${OWNER}/s3-pyspark:${SPARK_VERSION}-${HADOOP_VERSION} --no-cache -f kubernetes/dockerfiles/spark/bindings/python/Dockerfile --build-arg base_img=alexmilowski/s3-spark:${SPARK_VERSION}-${HADOOP_VERSION} .
+export IMAGE_VERSION=1
+docker build -t ${OWNER}/s3-spark:${SPARK_VERSION}-${HADOOP_VERSION}-${IMAGE_VERSION} --no-cache -f kubernetes/dockerfiles/spark/Dockerfile .
+docker build -t ${OWNER}/s3-pyspark:${SPARK_VERSION}-${HADOOP_VERSION}-${IMAGE_VERSION} --no-cache -f kubernetes/dockerfiles/spark/bindings/python/Dockerfile --build-arg base_img=alexmilowski/s3-spark:${SPARK_VERSION}-${HADOOP_VERSION}-${IMAGE_VERSION} .
 ```
