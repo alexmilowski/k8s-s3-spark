@@ -31,3 +31,13 @@ In the above command:
  * The `-Dhadoop.version=n.n.n` needs to match the target Hadoop version (2.8.0+)
 
 This will build a distribution you can use to build base container images.
+
+## Build Base Container Images
+
+```
+export OWNER=alexmilowski
+export SPARK_VERSION=2.4.1
+export HADOOP_VERSION=2.9.2
+docker build -t ${OWNER}/s3-spark:${SPARK_VERSION}-${HADOOP_VERSION} --no-cache -f kubernetes/dockerfiles/spark/Dockerfile .
+docker build -t ${OWNER}/s3-pyspark:${SPARK_VERSION}-${HADOOP_VERSION} --no-cache -f kubernetes/dockerfiles/spark/bindings/python/Dockerfile --build-arg base_img=alexmilowski/s3-spark:${SPARK_VERSION}-${HADOOP_VERSION} .
+```
