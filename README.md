@@ -71,7 +71,9 @@ docker run -it ${OWNER}/s3-spark-test:${SPARK_VERSION}-${HADOOP_VERSION}-${IMAGE
 
 ### Testing via an Amazon Example
 
-Build the image:
+The [Amazon Customer Reviews Dataset](https://registry.opendata.aws/amazon-reviews/) contains over a 130+ million customer review. The various files vary in size but the default is the `amazon_reviews_us_Digital_Video_Download_v1_00.tsv.gz` file which is ~ 0.5GB in size and sufficient for testing access.
+
+Build the testing image:
 
 ```bash
 export OWNER=alexmilowski
