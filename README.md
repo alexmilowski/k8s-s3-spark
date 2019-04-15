@@ -50,7 +50,7 @@ docker build -t ${OWNER}/s3-pyspark:${SPARK_VERSION}-${HADOOP_VERSION}-${IMAGE_V
 
 For K8S you'll need to package your code using one of these base images.
 
-## Testing S3 Access
+### Testing S3 Access
 
 You can build the access test via:
 
@@ -69,7 +69,7 @@ export SECRET_KEY=...
 docker run -it ${OWNER}/s3-spark-test:${SPARK_VERSION}-${HADOOP_VERSION}-${IMAGE_VERSION} /opt/spark/bin/spark-submit --master local /app/test_access.py --endpoint ${ENDPOINT} --access-key ${ACCESS_KEY} --secret-key ${SECRET_KEY} s3a://code/test_access.py
 ```
 
-## Amazon Example
+### Testing via an Amazon Example
 
 Build the image:
 
@@ -91,3 +91,5 @@ Test Access:
 ```bash
 docker run -it ${OWNER}/s3-spark-amazon-reviews:${SPARK_VERSION}-${HADOOP_VERSION}-${IMAGE_VERSION} /opt/spark/bin/spark-submit --master local /app/simple_read.py --access-key `grep aws_access_key_id ~/.aws/credentials | awk '{print $3}'` --secret-key "`grep aws_secret_access_key ~/.aws/credentials | awk '{print $3}'`"
 ```
+
+## Running Spark via K8S
