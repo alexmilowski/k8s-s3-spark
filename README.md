@@ -68,3 +68,26 @@ export ACCESS_KEY=...
 export SECRET_KEY=...
 docker run -it ${OWNER}/s3-spark-test:${SPARK_VERSION}-${HADOOP_VERSION}-${IMAGE_VERSION} /opt/spark/bin/spark-submit --master local /app/test_access.py --endpoint ${ENDPOINT} --access-key ${ACCESS_KEY} --secret-key ${SECRET_KEY} s3a://code/test_access.py
 ```
+
+## Amazon Example
+
+Build the image:
+
+```bash
+export OWNER=alexmilowski
+export SPARK_VERSION=2.4.1
+export HADOOP_VERSION=2.9.2
+export IMAGE_VERSION=1
+docker build -t ${OWNER}/s3-spark-amazon-reviews:${SPARK_VERSION}-${HADOOP_VERSION}-${IMAGE_VERSION} --no-cache -f examples/amazon-reviews/Dockerfile --build-arg base_img=${OWNER}/s3-pyspark:${SPARK_VERSION}-${HADOOP_VERSION}-${IMAGE_VERSION} .
+```
+
+Make sure you configure you AWS access (only once):
+
+```bash
+aws configure
+```
+
+Test Access:
+```bash
+docker run -it ${OWNER}/s3-spark-amazon-reviews:${SPARK_VERSION}-${HADOOP_VERSION}-${IMAGE_VERSION} /opt/spark/bin/spark-submit --master local /app/simple_read.py --access-key `grep aws_access_key_id ~/.aws/credentials | awk '{print $3}'` --secret-key "`grep aws_secret_access_key ~/.aws/credentials | awk '{print $3}'`"
+```
