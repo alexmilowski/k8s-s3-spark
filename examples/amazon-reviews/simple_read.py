@@ -59,3 +59,5 @@ df = spark.read \
 df.createOrReplaceTempView("reviews")
 
 spark.sql("select * from reviews limit 10").show()
+
+spark.stop()

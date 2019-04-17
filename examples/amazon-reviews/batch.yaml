@@ -1,0 +1,38 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: simple-read
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      serviceAccountName: spark
+      containers:
+      - name: start
+        image: ${OWNER}/s3-spark-amazon-reviews:${SPARK_VERSION}-${HADOOP_VERSION}-${TEST_VERSION}
+        command: ["/opt/spark/bin/spark-submit",
+                  "--master", "k8s://https://kubernetes.default/",
+                  "--deploy-mode", "cluster",
+                  "--name", "simple_read",
+                  "--conf", "spark.kubernetes.namespace=${NAMESPACE}",
+                  "--conf", "spark.kubernetes.authenticate.driver.serviceAccountName=spark",
+                  "--conf", "spark.kubernetes.container.image=${OWNER}/s3-spark-amazon-reviews:${SPARK_VERSION}-${HADOOP_VERSION}-${TEST_VERSION}",
+                  "--conf", "spark.kubernetes.driver.secretKeyRef.AWS_ACCESS_KEY_ID=aws-secrets:AWS_ACCESS_KEY_ID",
+                  "--conf", "spark.kubernetes.driver.secretKeyRef.AWS_SECRET_ACCESS_KEY=aws-secrets:AWS_SECRET_ACCESS_KEY",
+                  "--conf", "spark.kubernetes.executor.secretKeyRef.AWS_ACCESS_KEY_ID=aws-secrets:AWS_ACCESS_KEY_ID",
+                  "--conf", "spark.kubernetes.executor.secretKeyRef.AWS_SECRET_ACCESS_KEY=aws-secrets:AWS_SECRET_ACCESS_KEY",
+                  "--conf", "spark.kubernetes.pyspark.pythonVersion=3",
+                  "--conf", "spark.executor.instances=1",
+                  "local:///app/simple_read.py"]
+        env:
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: aws-secrets
+              key: AWS_ACCESS_KEY_ID
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: aws-secrets
+              key: AWS_SECRET_ACCESS_KEY
+      restartPolicy: Never
