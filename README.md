@@ -198,7 +198,7 @@ The batch job creates a pod that runs the spark-submit command. The spark-submit
 
 ### A Brief Description of the Example
 
-In `examples/amazon-reviews/batch.yaml`, the batch job uses the
+In [examples/amazon-reviews/batch.yaml](./examples/amazon-reviews/batch.yaml), the batch job uses the
 container image that was previously built. The `spark-submit` commands uses the following options:
 
  * `spark.kubernetes.container.image`: A reference to the same container image used in the batch job (all the code is in the same image)
